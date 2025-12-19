@@ -7,6 +7,7 @@ import java.util.List;
 public class RecursionExamples {
 
 	public static <T> void GenericPuzzleSolve(int K, List<T> S, List<T> U) {
+		//Created a new ArrayList to resolve concurrency read and write issue
 		for (T e : new ArrayList<>(U)) {
 			S.add(e);
 			U.remove(e);

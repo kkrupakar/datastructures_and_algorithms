@@ -13,7 +13,7 @@ public class SinglyLinkedList<E> implements Cloneable{
 		return size;
 	}
 
-	private boolean isEmpty() {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -32,9 +32,13 @@ public class SinglyLinkedList<E> implements Cloneable{
 	}
 
 	public void addFirst(E e) {
-		head = new Node<E>(e, null);
+		Node<E> newest = new Node<E>(e, null);
 		if (isEmpty()) {
+			head = newest;
 			tail = head;
+		}else {
+			newest.next = head;
+			head = newest;
 		}
 		size++;
 	}
