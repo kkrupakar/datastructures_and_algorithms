@@ -1,6 +1,9 @@
 package positionlist;
 
-public class LinkedPositionalList<E> implements PositionList<E> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class LinkedPositionalList<E> implements PositionalList<E>, Iterable<E> {
 
 	private Node<E> header;
 	private Node<E> trailer;
@@ -58,8 +61,8 @@ public class LinkedPositionalList<E> implements PositionList<E> {
 	}
 
 	@Override
-	public Position<E> after(Position<E> p) throws IllegalArgumentException {
-		Node<E> node = validate(p);
+	public Position<E> after(Position<E> cursor) throws IllegalArgumentException {
+		Node<E> node = validate(cursor);
 		return position(node.getNext());
 	}
 
@@ -115,8 +118,7 @@ public class LinkedPositionalList<E> implements PositionList<E> {
 		return answer;
 	}
 
-	@SuppressWarnings("hiding")
-	private class Node<E> implements Position<E> {
+	private static class Node<E> implements Position<E> {
 
 		private E element;
 		private Node<E> next;
@@ -156,6 +158,61 @@ public class LinkedPositionalList<E> implements PositionList<E> {
 			return element;
 		}
 
+	}
+
+	private class PositionIterator implements Iterator<Position<E>> {
+
+		private Position<E> cursor = first();
+		private Position<E> recent = null;
+
+		@Override
+		public boolean hasNext() {
+			return (cursor != null);
+		}
+
+		@Override
+		public Position<E> next() {
+			if (cursor == null)
+				throw new NoSuchElementException("nothing left");
+			recent = cursor;
+			cursor = after(cursor);
+			return recent;
+		}
+
+	}
+
+	private class PositionIterable implements Iterable<Position<E>> {
+
+		@Override
+		public Iterator<Position<E>> iterator() {
+			return new PositionIterator();
+		}
+
+	}
+
+	public Iterable<Position<E>> positions() {
+		return new PositionIterable();
+	}
+
+	private class ElementIterator implements Iterator<E> {
+
+		Iterator<Position<E>> posIterator = new PositionIterator();
+
+		@Override
+		public boolean hasNext() {
+			return posIterator.hasNext();
+		}
+
+		@Override
+		public E next() {
+			return posIterator.next().getElement();
+		}
+
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return new ElementIterator();
 	}
 
 }

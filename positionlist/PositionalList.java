@@ -1,6 +1,6 @@
 package positionlist;
 
-public interface PositionList<E> {
+public interface PositionalList<E> extends Iterable<E>{
 
 	int size();
 
@@ -25,4 +25,5 @@ public interface PositionList<E> {
 	E set(Position<E> p, E e) throws IllegalArgumentException;
 
 	E remove(Position<E> p) throws IllegalArgumentException;
+	
 }

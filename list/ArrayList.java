@@ -1,6 +1,11 @@
 package list;
 
-public class ArrayList<E> implements List<E> {
+import java.util.NoSuchElementException;
+
+import Iterator.ExIterable;
+import Iterator.ExIterator;
+
+public class ArrayList<E> implements List<E>, ExIterable<E> {
 
 	private static final int CAPACITY = 16;
 	private E[] data;
@@ -81,5 +86,30 @@ public class ArrayList<E> implements List<E> {
 		size--;
 		return temp;
 	}
+	
+
+	@Override
+	public ExIterator<E> iterator() {		
+		return new ArrayIterator<>();
+	}
+		
+	@SuppressWarnings("unchecked")
+	private class ArrayIterator<E> implements ExIterator<E>{
+		
+		private int j = 0;
+
+		@Override
+		public boolean hasNext() {			
+			return j < size;
+		}
+		
+		@Override
+		public E next() {
+			if(j == size) throw new NoSuchElementException("No next element");
+			return (E) data[j++];
+		}
+		
+	}
+
 
 }
